@@ -158,6 +158,7 @@
                     }
                     if (_.isValidDate(_.options.calendarEvents[i].date)) {
                         _.options.calendarEvents[i].date = _.formatDate(_.options.calendarEvents[i].date, _.options.format)
+
                     }
                 }
             }
@@ -171,9 +172,8 @@
             _.$current = {
                 month: (isNaN(this.month) || this.month === null) ? new Date().getMonth() : this.month,
                 year: (isNaN(this.year) || this.year === null) ? new Date().getFullYear() : this.year,
-                date: _.formatDate(_.initials.dates[_.defaults.language].months[new Date().getMonth()] + ' ' + new Date().getDate() + ' ' + new Date().getFullYear(), _.options.format)
+                date: _.formatDate((new Date().getMonth() + 1) + ' ' + new Date().getDate() + ' ' + new Date().getFullYear(), _.options.format)
             }
-
             // ACTIVE
             _.$active = {
                 month: _.$current.month,
@@ -317,6 +317,7 @@
     // v1.0.0 - Format date
     EvoCalendar.prototype.formatDate = function (date, format, language) {
         var _ = this;
+
         if (!date)
             return '';
 
@@ -324,14 +325,16 @@
 
         if (typeof format === 'string')
             format = _.parseFormat(format);
+
         if (format.toDisplay)
             return format.toDisplay(date, format, language);
 
         var ndate = new Date(date);
+
 //        if (!_.isValidDate(ndate)) { // test
 //            ndate = new Date(date.replace(/-/g, '/'))
-//
 //        }
+
         var val = {
             d: ndate.getDate(),
             D: _.initials.dates[language].daysShort[ndate.getDay()],
@@ -644,9 +647,7 @@
 
         _.$active.events = [];
         // Event date
-
         var title = _.formatDate(_.$active.date, _.options.eventHeaderFormat, _.options.language);
-
         _.$elements.eventEl.find('.event-header > p').text(title);
         // Event list
         var eventListEl = _.$elements.eventEl.find('.event-list');
@@ -770,7 +771,7 @@
                     if ($.browser.mozilla) {
                         thisDay = _.formatDate((_.$active.month + 1) + ' ' + day + ' ' + _.$active.year, _.options.format);
                     } else {
-                        thisDay = _.formatDate('0' + (_.$active.month + 1) + '/' + day + '/' + _.$active.year, _.options.format);
+                        thisDay = _.formatDate((_.$active.month + 1) + '/' + day + '/' + _.$active.year, _.options.format);
 
                     }
                     markup += '<div class="day" role="button" data-date-val="' + thisDay + '">' + day + '</div>';
@@ -789,8 +790,10 @@
         markup += '</tr>';
         _.$elements.innerEl.find('.calendar-table').append(markup);
 
+        console.log(_.options.todayHighlight)
         if (_.options.todayHighlight) {
             _.$elements.innerEl.find("[data-date-val='" + _.$current.date + "']").addClass('calendar-today');
+            console.log(_.$current.date)
         }
 
         // set event listener for each day
