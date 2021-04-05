@@ -172,7 +172,7 @@
             _.$current = {
                 month: (isNaN(this.month) || this.month === null) ? new Date().getMonth() : this.month,
                 year: (isNaN(this.year) || this.year === null) ? new Date().getFullYear() : this.year,
-                date: _.formatDate((new Date().getMonth() + 1) + ' ' + new Date().getDate() + ' ' + new Date().getFullYear(), _.options.format)
+                date: _.formatDate(new Date(), _.options.format, _.options.language),
             }
             // ACTIVE
             _.$active = {
