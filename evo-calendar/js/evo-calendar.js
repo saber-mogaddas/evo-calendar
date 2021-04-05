@@ -63,19 +63,6 @@
                         closeSidebarText: "Close sidebar",
                         closeEventListText: "Close event list"
                     },
-                    tt: {
-                        days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                        daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                        daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-                        months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                        monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                        noEventForToday: "No event for today.. so take a rest! :)",
-                        noEventForThisDay: "No event for this day.. so take a rest! :)",
-                        previousYearText: "Previous year",
-                        nextYearText: "Next year",
-                        closeSidebarText: "Close sidebar",
-                        closeEventListText: "Close event list"
-                    },
                     tr: {
                         days: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
                         daysShort: ["Paz", "Pts", "Sal", "Çar", "Per", "Cum", "Cts"],
@@ -163,7 +150,7 @@
 
 
             // Format Calendar Events into selected format
-            if (_.options.calendarEvents != null) {
+            if (_.options.calendarEvents !== null) {
                 for (var i = 0; i < _.options.calendarEvents.length; i++) {
                     // If event doesn't have an id, throw an error message
                     if (!_.options.calendarEvents[i].id) {
@@ -182,8 +169,8 @@
 
             // CURRENT
             _.$current = {
-                month: (isNaN(this.month) || this.month == null) ? new Date().getMonth() : this.month,
-                year: (isNaN(this.year) || this.year == null) ? new Date().getFullYear() : this.year,
+                month: (isNaN(this.month) || this.month === null) ? new Date().getMonth() : this.month,
+                year: (isNaN(this.year) || this.year === null) ? new Date().getFullYear() : this.year,
                 date: _.formatDate(_.initials.dates[_.defaults.language].months[new Date().getMonth()] + ' ' + new Date().getDate() + ' ' + new Date().getFullYear(), _.options.format)
             }
 
@@ -340,7 +327,6 @@
         if (format.toDisplay)
             return format.toDisplay(date, format, language);
 
-
         var ndate = new Date(date);
 //        if (!_.isValidDate(ndate)) { // test
 //            ndate = new Date(date.replace(/-/g, '/'))
@@ -376,9 +362,9 @@
         for (var x = 0; x < _.monthLength; x++) {
             var active_date;
             if ($.browser.mozilla) {
-                active_date = _.formatDate((_.$active.month + 1) + ' ' + (x + 1) + ' ' + _.$active.year, _.options.format);
+                active_date = _.formatDate((_.$active.month + 1) + '/' + (x + 1) + '/' + _.$active.year, _.options.format);
             } else {
-                active_date = _.formatDate(_.$label.months[_.$active.month] + ' ' + (x + 1) + ' ' + _.$active.year, _.options.format);
+                active_date = _.formatDate((_.$active.month + 1) + '/' + (x + 1) + '/' + _.$active.year, _.options.format);
             }
             if (_.isBetweenDates(active_date, dates)) {
                 betweenDates.push(active_date);
@@ -551,8 +537,9 @@
     EvoCalendar.prototype.calculateDays = function () {
         var _ = this, nameDays, weekStart, firstDay;
         _.monthLength = _.$label.days_in_month[_.$active.month]; // find number of days in month
-        if (_.$active.month == 1) { // compensate for leap year - february only!
-            if ((_.$active.year % 4 == 0 && _.$active.year % 100 != 0) || _.$active.year % 400 == 0) {
+
+        if (_.$active.month === 1) { // compensate for leap year - february only!
+            if ((_.$active.year % 4 === 0 && _.$active.year % 100 !== 0) || _.$active.year % 400 === 0) {
                 _.monthLength = 29;
             }
         }
@@ -560,7 +547,7 @@
         weekStart = _.options.firstDayOfWeek;
 
         while (_.$label.days.length < nameDays.length) {
-            if (weekStart == nameDays.length) {
+            if (weekStart === nameDays.length) {
                 weekStart = 0;
             }
             _.$label.days.push(nameDays[weekStart]);
@@ -657,6 +644,7 @@
 
         _.$active.events = [];
         // Event date
+
         var title = _.formatDate(_.$active.date, _.options.eventHeaderFormat, _.options.language);
 
         _.$elements.eventEl.find('.event-header > p').text(title);
@@ -672,9 +660,7 @@
                 } else if (_.options.calendarEvents[i].everyYear) {
                     var d = new Date(_.$active.date).getMonth() + 1 + ' ' + new Date(_.$active.date).getDate();
                     var dd = new Date(_.options.calendarEvents[i].date).getMonth() + 1 + ' ' + new Date(_.options.calendarEvents[i].date).getDate();
-                    // var dates = [_.formatDate(_.options.calendarEvents[i].date[0], 'mm/dd'), _.formatDate(_.options.calendarEvents[i].date[1], 'mm/dd')];
-
-                    if (d == dd) {
+                    if (d === dd) {
                         eventAdder(_.options.calendarEvents[i])
                     }
                 }
@@ -702,6 +688,7 @@
     EvoCalendar.prototype.addEventList = function (event_data) {
         var _ = this, markup;
         var eventListEl = _.$elements.eventEl.find('.event-list');
+
         if (eventListEl.find('[data-event-index]').length === 0)
             eventListEl.empty();
         _.$active.events.push(event_data);
@@ -762,9 +749,8 @@
         var _ = this, markup, title;
 
         _.calculateDays();
-
         title = _.formatDate(new Date((_.$active.month + 1) + '/01/' + _.$active.year), _.options.titleFormat, _.options.language);
-        console.log("title:", title)
+
         _.$elements.innerEl.find('.calendar-table th').text(title);
 
         _.$elements.innerEl.find('.calendar-body').remove(); // Clear days
@@ -784,7 +770,8 @@
                     if ($.browser.mozilla) {
                         thisDay = _.formatDate((_.$active.month + 1) + ' ' + day + ' ' + _.$active.year, _.options.format);
                     } else {
-                        thisDay = _.formatDate(_.$label.months[_.$active.month] + ' ' + day + ' ' + _.$active.year, _.options.format);
+                        thisDay = _.formatDate('0' + (_.$active.month + 1) + '/' + day + '/' + _.$active.year, _.options.format);
+
                     }
                     markup += '<div class="day" role="button" data-date-val="' + thisDay + '">' + day + '</div>';
                     day++;
@@ -819,7 +806,7 @@
             // Add active class to selected date
             selectedDate.addClass('calendar-active');
         }
-        if (_.options.calendarEvents != null) { // For event indicator (dots)
+        if (_.options.calendarEvents !== null) { // For event indicator (dots)
             _.buildEventIndicator();
         }
     };
